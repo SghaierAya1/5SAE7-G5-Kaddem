@@ -2,48 +2,47 @@ pipeline {
     agent any
 
     stages {
-        // Stage 1: Clone Repository
-        stage('Clone Repository') {
-            steps {
-                echo "Cloning repository from GitHub..."
-                // Jenkins gère le clonage en fonction de la configuration du job.
-            }
-        }
-
-        // Stage 2: Build the Project
         stage('Build') {
             steps {
-                script {
-                    echo "Building the project with Maven..."
-                    dir('kaddem') {  // Navigue dans le répertoire contenant le fichier pom.xml
-                        sh 'mvn clean install'  // Compile le projet
-                    }
-                }
+                // Your build steps, e.g., compile the project
+                sh 'mvn clean package -Dmaven.test.skip=true'
             }
         }
 
-        // Stage 3: SonarQube Analysis
-        stage('Sonarqube') {
+        stage('SonarQube Analysis') {
+                   steps {
+                       // Run SonarQube analysis
+                       sh '''
+                       mvn sonar:sonar \
+                           -Dsonar.host.url=http://192.168.33.10:9000 \
+                           -Dsonar.login=admin \
+                           -Dsonar.password=Rim12356113* \
+                           -Dmaven.test.skip=true
+                       '''
+                   }
+               }
+
+        stage('Test') {
             steps {
-                script {
-                    echo "Running SonarQube analysis..."
-                    dir('kaddem') {  // Navigue dans le répertoire contenant le fichier pom.xml
-                        sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113* -Dmaven.test.skip=true'  // Exécute l'analyse SonarQube
-                    }
-                }
+                // Run tests here
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deployment steps here
+                echo 'Deploying application...'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline execution completed.'
-        }
         success {
-            echo 'Build and tests were successful!'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Build or tests failed. Check the logs for details.'
+            echo 'Pipeline failed!'
         }
     }
 }
