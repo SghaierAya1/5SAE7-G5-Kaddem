@@ -1,0 +1,36 @@
+pipeline {
+    agent any  
+
+    stages {
+        // Stage 1: Clone Repository
+        stage('Clone Repository') {
+            steps {
+                echo "Cloning repository from GitHub..."
+                // This is informational; Jenkins handles cloning based on job config.
+            }
+        }
+
+        // Stage 2: Build the Project
+        stage('Build') {
+            steps {
+                script {
+                    echo "Building the project with Maven..."
+                    sh 'mvn clean install'  // Build the project
+                }
+            }
+        }
+
+     }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Build and tests were successful!'
+        }
+        failure {
+            echo 'Build or tests failed. Check the logs for details.'
+        }
+    }
+}
