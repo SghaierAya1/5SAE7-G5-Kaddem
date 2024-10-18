@@ -1,12 +1,12 @@
 pipeline {
-    agent any  
+    agent any
 
     stages {
         // Stage 1: Clone Repository
         stage('Clone Repository') {
             steps {
                 echo "Cloning repository from GitHub..."
-                // This is informational; Jenkins handles cloning based on job config.
+                // Jenkins gère le clonage en fonction de la configuration du job.
             }
         }
 
@@ -15,8 +15,8 @@ pipeline {
             steps {
                 script {
                     echo "Building the project with Maven..."
-                    dir('kaddem') {  // Navigate to the kaddem directory
-                        sh 'mvn clean install'  // Build the project
+                    dir('kaddem') {  // Navigue dans le répertoire contenant le fichier pom.xml
+                        sh 'mvn clean install'  // Compile le projet
                     }
                 }
             }
@@ -25,8 +25,12 @@ pipeline {
         // Stage 3: SonarQube Analysis
         stage('Sonarqube') {
             steps {
-                echo "Running SonarQube analysis..."
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113* -Dmaven.test.skip=true'
+                script {
+                    echo "Running SonarQube analysis..."
+                    dir('kaddem') {  // Navigue dans le répertoire contenant le fichier pom.xml
+                        sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113* -Dmaven.test.skip=true'  // Exécute l'analyse SonarQube
+                    }
+                }
             }
         }
     }
