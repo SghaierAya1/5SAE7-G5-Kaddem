@@ -11,14 +11,15 @@ pipeline {
         }
 
         // Stage 2: Build the Project
-        stage('Build') {
-            steps {
-                script {
-                    echo "Building the project with Maven..."
-                    sh 'mvn clean install'  // Build the project
-                }
+    stage('Build') {
+    steps {
+        script {
+            echo "Building the project with Maven..."
+            dir('kaddem') {  // Navigate to the kaddem directory
+                sh 'mvn clean install'  // Build the project
             }
         }
+    }
 
      }
 
