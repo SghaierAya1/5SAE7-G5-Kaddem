@@ -20,8 +20,16 @@ pipeline {
                     }
                 }
             }
-        } // Correctly close the Build stage here
-    } // Close the stages block here
+        }
+
+        // Stage 3: SonarQube Analysis
+        stage('Sonarqube') {
+            steps {
+                echo "Running SonarQube analysis..."
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113* -Dmaven.test.skip=true'
+            }
+        }
+    }
 
     post {
         always {
