@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from SCM
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
                 // Your build steps, e.g., compile the project
@@ -10,29 +17,15 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-                   steps {
-                       // Run SonarQube analysis
-                       sh '''
-                       mvn sonar:sonar \
-                           -Dsonar.host.url=http://192.168.33.10:9000 \
-                           -Dsonar.login=admin \
-                           -Dsonar.password=Rim12356113* \
-                           -Dmaven.test.skip=true
-                       '''
-                   }
-               }
-
-        stage('Test') {
             steps {
-                // Run tests here
-                sh 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Deployment steps here
-                echo 'Deploying application...'
+                // Run SonarQube analysis
+                sh '''
+                mvn sonar:sonar \
+                    -Dsonar.host.url=http://192.168.33.10:9000 \
+                    -Dsonar.login=admin \
+                    -Dsonar.password=Rim12356113* \
+                    -Dmaven.test.skip=true
+                '''
             }
         }
     }
