@@ -12,14 +12,14 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo "Running Maven Clean..."
-                sh './mvnw clean' // Utilisez le wrapper Maven si disponible
+                sh 'mvn clean' // Utilisez le wrapper Maven si disponible
             }
         }
 
         stage('MVN COMPILE') {
             steps {
                 echo "Running Maven Compile..."
-                sh './mvnw compile' // Utilisez le wrapper Maven si disponible
+                sh 'mvn compile' // Utilisez le wrapper Maven si disponible
             }
         }
 
