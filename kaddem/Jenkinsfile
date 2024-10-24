@@ -2,10 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Checkout GIT') {
             steps {
-                // Checkout code from SCM
-                checkout scm
+                echo 'Pulling ...'
+                git(
+                    branch: 'RimOuertani-5SAE7-G5',
+                    url: 'https://github.com/SghaierAya1/5SAE7-G5-Kaddem.git'
+                )
             }
         }
 
@@ -25,17 +28,8 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113* -Dmaven.test.skip=true'
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113*'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
