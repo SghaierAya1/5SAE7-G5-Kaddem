@@ -32,7 +32,7 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                dir('kaddem') { // Toujours dans le dossier 'kaddem'
+                 script { // Toujours dans le dossier 'kaddem'
                     sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113*'
                 }
             }
