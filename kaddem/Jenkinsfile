@@ -9,26 +9,23 @@ pipeline {
             }
         }
 
-       stage('Build') {
-                   steps {
-                       script {
-                           echo "Building the project with Maven..."
-                           dir('kaddem') {  // Navigate to the kaddem directory
-                               sh 'mvn clean install'  // Build the project
-                           }
-                       }
-                   }
-
-        stage('SonarQube Analysis') {
+        stage('MVN CLEAN') {
             steps {
-                // Run SonarQube analysis
-                sh '''
-                mvn sonar:sonar \
-                    -Dsonar.host.url=http://192.168.33.10:9000 \
-                    -Dsonar.login=admin \
-                    -Dsonar.password=Rim12356113* \
-                    -Dmaven.test.skip=true
-                '''
+                echo "Running Maven Clean..."
+                sh './mvnw clean' // Utilisez le wrapper Maven si disponible
+            }
+        }
+
+        stage('MVN COMPILE') {
+            steps {
+                echo "Running Maven Compile..."
+                sh './mvnw compile' // Utilisez le wrapper Maven si disponible
+            }
+        }
+
+        stage('Static Analysis') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113* -Dmaven.test.skip=true'
             }
         }
     }
