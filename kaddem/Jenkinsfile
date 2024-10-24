@@ -15,20 +15,26 @@ pipeline {
         stage('MVN CLEAN') {
             steps {
                 echo "Running Maven Clean..."
-                sh 'mvn clean' // Utilisez le wrapper Maven si disponible
+                dir('kaddem') { // On se déplace dans le dossier 'kaddem' où se trouve le fichier pom.xml
+                    sh 'mvn clean'
+                }
             }
         }
 
         stage('MVN COMPILE') {
             steps {
                 echo "Running Maven Compile..."
-                sh 'mvn compile' // Utilisez le wrapper Maven si disponible
+                dir('kaddem') { // Toujours dans le dossier 'kaddem'
+                    sh 'mvn compile'
+                }
             }
         }
 
         stage('Static Analysis') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113*'
+                dir('kaddem') { // Toujours dans le dossier 'kaddem'
+                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=Rim12356113*'
+                }
             }
         }
     }
