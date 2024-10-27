@@ -128,9 +128,9 @@
     <!--Deploy to Nexus -->
     <distributionManagement>
         <repository>
-            <id>deploymentRepo</id>
+            <id>deploymentRepo</id> <!-- Make sure this matches the ID in your settings.xml -->
             <name>Nexus Repository</name>
-            <url>http://localhost:8081/repository/maven-releases/</url>
+            <url>http://192.168.33.10:8081/#admin/repository/repositories:maven-releases</url>
         </repository>
     </distributionManagement>
 </project>
