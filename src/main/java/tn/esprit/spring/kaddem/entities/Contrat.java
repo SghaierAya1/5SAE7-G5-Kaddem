@@ -24,7 +24,7 @@ public class Contrat implements Serializable{
     @ManyToOne(cascade = CascadeType.ALL)
     private Etudiant etudiant;
 
-    public Contrat() {
+    public Contrat(int contratId) {
         // TODO Auto-generated constructor stub
     }
 
@@ -47,6 +47,10 @@ public class Contrat implements Serializable{
         this.specialite = specialite;
         this.archive = archive;
         this.montantContrat = montantContrat;
+    }
+
+    public Contrat() {
+
     }
 
     public Integer getIdContrat() {

@@ -23,7 +23,7 @@ public class Equipe implements Serializable{
     @OneToOne
     private DetailEquipe detailEquipe;
 
-    public Equipe() {
+    public Equipe(int equipeId, String equipe1) {
         // TODO Auto-generated constructor stub
     }
 
@@ -57,6 +57,10 @@ public class Equipe implements Serializable{
         this.niveau = niveau;
         this.etudiants = etudiants;
         this.detailEquipe = detailEquipe;
+    }
+
+    public Equipe() {
+
     }
 
     public Set<Etudiant> getEtudiants() {
