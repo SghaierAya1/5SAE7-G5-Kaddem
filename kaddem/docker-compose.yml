@@ -1,57 +1,36 @@
-version: '3'
+version: "3"
 
 services:
-  app:
+  app-kaddem:
     image: rrim/kaddem-app:1.0
-    ports:
-      - "8089:8089"  # Expose the application on port 8089
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD:
     depends_on:
-      - db
-    networks:
-      - monitoring
-
-  db:
-    image: mysql:8
+      - mysqldb
+    ports:
+      - "8089:8089"  # Expose port 8089 for the application
     environment:
-      MYSQL_ROOT_PASSWORD:
-      MYSQL_DATABASE: kaddem
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=  # Adjust if a password is required
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+      - spring.jpa.hibernate.ddl-auto=update
+    networks:
+      - app-network  # Ensure both services are on the same network
+
+  mysqldb:
+    image: mysql:8  # Using MySQL 8 based on your initial configuration
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes  # Allows no password for MySQL root user (or replace with MYSQL_ROOT_PASSWORD if needed)
+      - MYSQL_DATABASE=kaddem  # Database name (won't affect data if db_data volume is used)
+    ports:
+      - "3306:3306"  # Expose MySQL on port 3306
     volumes:
-      - db_data:/var/lib/mysql
-
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"  # Prometheus accessible on port 9090
+      - db_data:/var/lib/mysql  # Reuse existing data volume
     networks:
-      - monitoring
-    command: |
-      --config.file=/etc/prometheus/prometheus.yml
-    entrypoint: >
-      sh -c 'echo "
-      global:
-        scrape_interval: 15s
-
-      scrape_configs:
-        - job_name: \'spring-boot-backend\'
-          metrics_path: \'/actuator/prometheus\'
-          static_configs:
-            - targets: [\'app:8089\']
-      " > /etc/prometheus/prometheus.yml && /bin/prometheus --config.file=/etc/prometheus/prometheus.yml'
-
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"  # Grafana accessible on port 3000
-    networks:
-      - monitoring
-
-networks:
-  monitoring:
-    driver: bridge
+      - app-network  # Same network as the application
 
 volumes:
-  db_data:
+  db_data:  # Keep the volume name unchanged to retain data
+
+networks:
+  app-network:
+    driver: bridge
