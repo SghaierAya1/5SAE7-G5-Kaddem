@@ -1,8 +1,10 @@
+version: '3'
+
 services:
   app:
     image: rrim/kaddem-app:1.0
     ports:
-      - "8089:8089"
+      - "8089:8089"  # Expose the application on port 8089
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
@@ -10,7 +12,7 @@ services:
     depends_on:
       - db
     networks:
-      - monitoring  # Add app to the monitoring network
+      - monitoring
 
   db:
     image: mysql:8
@@ -23,7 +25,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - "9090:9090"
+      - "9090:9090"  # Prometheus accessible on port 9090
     networks:
       - monitoring
     command: |
@@ -43,7 +45,7 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Grafana accessible on port 3000
     networks:
       - monitoring
 
