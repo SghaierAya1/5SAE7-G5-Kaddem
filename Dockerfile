@@ -1,10 +1,11 @@
+# Utilise l'image de base OpenJDK 11 (ou une version compatible)
 FROM openjdk:11-jre-slim
 
-# Expose the application port
+# Expose le port sur lequel l'application sera accessible
 EXPOSE 8089
 
-# Add the JAR file into the container
+# Ajoute le JAR de votre application (nommez correctement le fichier jar)
 ADD target/kaddem-0.0.1.jar kaddem-0.0.1.jar
 
-# Set the entrypoint for the application
+# Spécifie la commande pour démarrer l'application
 ENTRYPOINT ["java", "-jar", "/kaddem-0.0.1.jar"]
