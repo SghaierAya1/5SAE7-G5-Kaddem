@@ -9,3 +9,5 @@ ADD target/kaddem-0.0.1.jar kaddem-0.0.1.jar
 
 # Spécifie la commande pour démarrer l'application
 ENTRYPOINT ["java", "-jar", "/kaddem-0.0.1.jar"]
+
+
