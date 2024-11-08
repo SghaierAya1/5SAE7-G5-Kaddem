@@ -1,41 +1,36 @@
+version: "3"
+
 services:
   app-kaddem:
-    image: sghaieraya-g2-5sae7
+    image: ayasghaier/kaddem-app:1.0
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
     ports:
-      - "8089:8089"
+      - "8089:8089"  # Expose port 8089 for the application
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_DATASOURCE_PASSWORD=  # Adjust if a password is required
       - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
       - spring.jpa.hibernate.ddl-auto=update
     networks:
-      - vagrant_app-network
+      - app-network  # Ensure both services are on the same network
 
   mysqldb:
-    image: mysql:8
+    image: mysql:8  # Using MySQL 8 based on your initial configuration
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=kaddem
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes  # Allows no password for MySQL root user (or replace with MYSQL_ROOT_PASSWORD if needed)
+      - MYSQL_DATABASE=kaddem  # Database name (won't affect data if db_data volume is used)
     ports:
-      - "3306:3306"
+      - "3306:3306"  # Expose MySQL on port 3306
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql  # Reuse existing data volume
     networks:
-      - vagrant_app-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--host=localhost"]
-      interval: 30s
-      retries: 5
-      start_period: 10s
-      timeout: 10s
+      - app-network  # Same network as the application
 
 volumes:
-  db_data:
+  db_data:  # Keep the volume name unchanged to retain data
 
 networks:
-  vagrant_app-network:
-    external: true
+  app-network:
+    driver: bridge
